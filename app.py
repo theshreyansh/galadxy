@@ -848,7 +848,11 @@ def streamlit_dashboard() -> None:
                 st.plotly_chart(fig, use_container_width=True)
 
                 st.write("#### Sensor Timeliness")
-                ts = filtered_sensor_data.set_index("timestamp").resample("H")["equipment_id"].count()
+                timeliness_data = filtered_sensor_data.copy()
+                if not pd.api.types.is_datetime64_any_dtype(timeliness_data["timestamp"]):
+                    timeliness_data["timestamp"] = pd.to_datetime(timeliness_data["timestamp"], errors="coerce")
+                timeliness_data = timeliness_data.dropna(subset=["timestamp"])
+                ts = timeliness_data.set_index("timestamp").resample("H")["equipment_id"].count()
                 if not ts.empty:
                     fig = px.line(ts, labels={"index":"Time", "value":"Records/H"}, height=320)
                     fig.update_traces(line_color="#fb923c")
