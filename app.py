@@ -679,18 +679,15 @@ def streamlit_dashboard() -> None:
         st.session_state.business_impact = None
         st.session_state.report_file = None
         st.session_state.initialized = False
-        st.session_state.streaming_mode = False
 
     app = st.session_state.galaxy_app
 
-    top_bar = st.columns([1, 9])
+    top_bar = st.columns([9, 1])
     with top_bar[0]:
-        stream_button_label = "Activate Streaming Mode" if not st.session_state.streaming_mode else "Deactivate Streaming Mode"
-        if st.button(stream_button_label):
-            st.session_state.streaming_mode = not st.session_state.streaming_mode
-            st.session_state.initialized = False
+        st.markdown("**Manual Refresh**: Press the button when you want the latest data loaded into the dashboard.")
     with top_bar[1]:
-        st.markdown("**Streaming refresh**: The dashboard refreshes every 10 seconds when streaming mode is enabled.")
+        if st.button("Refresh", key="refresh_dashboard"):
+            st.session_state.initialized = False
 
     if "dashboard_query" not in st.session_state:
         st.session_state.dashboard_query = ""
@@ -705,16 +702,13 @@ def streamlit_dashboard() -> None:
     selected_shifts = ["Morning", "Afternoon", "Night"]
     min_anomaly_score = 0.6
 
-    if not st.session_state.initialized or st.session_state.streaming_mode:
+    if not st.session_state.initialized:
         app.generate_synthetic_data(num_records=sample_size)
         app.detect_anomalies()
         app.generate_maintenance_orders()
         st.session_state.sap_sync = app.integrate_with_sap()
         st.session_state.business_impact = app.calculate_business_impact()
         st.session_state.initialized = True
-
-    if st.session_state.streaming_mode:
-        st.markdown('<meta http-equiv="refresh" content="10">', unsafe_allow_html=True)
 
     filtered_sensor_data = app.sensor_data.copy() if app.sensor_data is not None else pd.DataFrame()
     filtered_anomalies = app.anomalies.copy() if app.anomalies is not None else pd.DataFrame(
