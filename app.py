@@ -136,7 +136,7 @@ class GalaxyApp:
                 "shift": np.random.choice(["Morning", "Afternoon", "Night"]),
                 "is_anomaly": is_anomaly,
                 "device_type": self.fake.word(),
-                "company": "Galaxy Surfactants" if np.random.random() < 0.7 else "Galaxy Surfactants - Global"
+                "company": "Galaxy" if np.random.random() < 0.7 else "Galaxy - Global"
             }
             data.append(record)
         
@@ -426,7 +426,7 @@ class GalaxyApp:
             "cost_savings": {
                 "maintenance_optimization": f"₹{maintenance_cost_savings:,.0f}",
                 "annual_savings": f"₹{total_annual_savings:,.0f}/year",
-                "benchmark": "Galaxy Surfactants strategic benchmark"
+                "benchmark": "Galaxy strategic benchmark"
             },
             "roi": {
                 "estimated_payback_months": 4,
@@ -668,9 +668,9 @@ def streamlit_dashboard() -> None:
     _apply_streamlit_style()
 
     st.markdown(
-        "# Galaxy Surfactants - AI Driven Predictive Maintenance Control Center"
+        "# Galaxy - AI Driven Predictive Maintenance Control Center"
         "\n\n"
-        "A solution for operations, risk, and SOX controls across Galaxy Surfactants plants."
+        "A solution for operations, risk, and SOX controls across Galaxy plants."
     )
 
     if "galaxy_app" not in st.session_state:
